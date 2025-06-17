@@ -1,0 +1,76 @@
+import inputSanitizer as ips
+
+payloads = [
+    r"'",
+    r"''",
+    r"`",
+    r"``",
+    r",",
+    r'"',
+    r'""',
+    r"//",
+    r"\\",
+    r"\\\\",
+    r";",
+    r"' or \"",
+    r"-- or #",
+    r"' OR '1",
+    r"' OR 1 -- -",
+    r'" OR "" = "',
+    r'" OR 1 = 1 -- -',
+    r"' OR '' = '",
+    r"'='",
+    r"'LIKE'",
+    r"'=0--+",
+    r" OR 1=1",
+    r"' OR 'x'='x",
+    r"' AND id IS NULL; --",
+    r"'''''''''''''UNION SELECT '2",
+    r"%00",
+    r"/*…*/",
+    r"+",
+    r"||",
+    r"%",
+    r"@variable",
+    r"@@variable",
+    r"AND 1",
+    r"AND 0",
+    r"AND true",
+    r"AND false",
+    r"1-false",
+    r"1-true",
+    r"1*56",
+    r"-2",
+    r"1' ORDER BY 1--+",
+    r"1' ORDER BY 2--+",
+    r"1' ORDER BY 3--+",
+    r"1' ORDER BY 1,2--+",
+    r"1' ORDER BY 1,2,3--+",
+    r"1' GROUP BY 1,2,--+",
+    r"1' GROUP BY 1,2,3--+",
+    r"' GROUP BY columnnames having 1=1 --",
+    r"-1' UNION SELECT 1,2,3--+",
+    r"' UNION SELECT sum(columnname ) from tablename --",
+    r"-1 UNION SELECT 1 INTO @,@",
+    r"-1 UNION SELECT 1 INTO @,@,@",
+    r"1 AND (SELECT * FROM Users) = 1",
+    r"' AND MID(VERSION(),1,1) = '5';",
+    r"' and 1 in (select min(name) from sysobjects where xtype = 'U' and name > '.') --",
+    r",(select * from (select(sleep(10)))a)",
+    r"%2c(select%20*%20from%20(select(sleep(10)))a)",
+    r"';WAITFOR DELAY '0:0:30'--",
+    r"#",
+    r"/*",
+    r"-- -",
+    r";%00",
+    r"`"
+]
+
+
+print("--- sqlSanitize default modda test ediliyor (mode 1) ---\n")
+for payload in payloads:
+    try:
+        sonuc = ips.sqlSanitize(payload)
+        print(f"Payload: {payload!r} => Sanitized Output: {sonuc}")
+    except Exception as e:
+        print(f"Payload: {payload!r} => Error: {e}")
